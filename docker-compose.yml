@@ -1,0 +1,37 @@
+version: '3.9'
+
+networks:
+  web:
+    external: true
+  internal:
+    external: false
+
+services:
+
+  pritunl:
+    container_name: pritunl
+    image: ghcr.io/jippi/docker-pritunl
+    restart: always
+    privileged: true
+    ports:
+      - "15173:15173/udp"
+    volumes:
+      - './data/pritunl.conf:/etc/pritunl.conf'
+      - './data/pritunl:/var/lib/pritunl'
+      - './data/mongodb:/var/lib/mongodb'
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=web"
+      - "traefik.http.services.pritunl-service.loadbalancer.server.port=80"
+      - "traefik.http.routers.pritunl-http.entrypoints=http"
+      - "traefik.http.routers.pritunl-http.service=pritunl-service"
+      - "traefik.http.routers.pritunl-http.rule=Host(`${FQDN_VALUE}`)"
+      - "traefik.http.routers.pritunl-https.tls.certresolver=letsencryptresolver"
+      - "traefik.http.middlewares.pritunl-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.pritunl-http.middlewares=pritunl-redirect"
+      - "traefik.http.routers.pritunl-https.entrypoints=https"
+      - "traefik.http.routers.pritunl-https.tls=true"
+      - "traefik.http.routers.pritunl-https.rule=Host(`${FQDN_VALUE}`)"
+      - "traefik.http.routers.pritunl-https.service=pritunl-service"
+    networks:
+      - web
