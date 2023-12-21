@@ -1,6 +1,6 @@
 # Pritunl-Traefik
 
-[Pritunl in docker](https://github.com/jippi/docker-pritunl) compose with embedded MongoDB behind [Traefik](https://github.com/Bald1nh0/Traefik-v2-docker-compose)
+[Pritunl in docker](https://github.com/jippi/docker-pritunl) compose with embedded MongoDB behind [Traefik v2](https://github.com/Bald1nh0/Traefik-v2-docker-compose)
 
 ## Setup
 
